@@ -1,0 +1,173 @@
+{
+  "name": "Day-02 AI Email Assistant",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3993cfb5-07d0-4963-9c3d-f64d1ccde5ee",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "85d42e9a-401d-44f1-a0bf-8529029b003b",
+              "name": "Name",
+              "value": "Haris",
+              "type": "string"
+            },
+            {
+              "id": "863b316b-cf07-4e50-a2f1-47587fa4ba53",
+              "name": "Email",
+              "value": "richmindset2027@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "772ef028-8dc3-448b-8e37-59650b820364",
+              "name": "Message",
+              "value": "Hello, I want AI Automation for my business.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "3b44f733-6502-4e8b-b067-086ce9001647",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are ptofessional AI Email Assistent.\nReply to the following emails professionally:\n{{ $json.Message }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6a8c6fbf-aa09-4826-890c-94da95f311a8",
+      "name": "AI Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        288,
+        208
+      ],
+      "id": "908ce684-7c67-4692-82d1-f60863e41c95",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "naXGIdHWjMKVUmLh",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "Re: AI Automation Inquiry",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        768,
+        0
+      ],
+      "id": "0eb15b55-38f9-48bf-8da2-93784605ee28",
+      "name": "Send a message",
+      "webhookId": "9ad4b7b4-6501-4899-a2db-1bc3129d2dde",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FodAESarhY7QOWGZ",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "1ed2cc37-a487-4701-ac89-d96f1b686f00",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "549df9e0322e1375bab9dc419be14a41c3260b644d9c6590c90b3792a5c63d5b"
+  },
+  "nodeGroups": [],
+  "id": "nuKleu80vXRro2Ip",
+  "tags": []
+}
